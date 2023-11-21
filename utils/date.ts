@@ -1,8 +1,13 @@
-import {add, previousMonday, sub, nextSunday} from 'date-fns';
+import {add, previousMonday, sub, nextSunday, isMonday} from 'date-fns';
+
 import {Recurrence} from '../types/recurrence';
 
 export const calculateRange = (period: Recurrence, periodIndex: number) => {
-  const now = new Date();
+  const date = new Date();
+  const now = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
+  );
+
   let start: Date = new Date();
   let end: Date = new Date();
 
@@ -16,7 +21,10 @@ export const calculateRange = (period: Recurrence, periodIndex: number) => {
       });
       break;
     case Recurrence.Weekly:
-      const firstDayOfThisWeek = previousMonday(now);
+      let firstDayOfThisWeek = now;
+      if (!isMonday(now)) {
+        firstDayOfThisWeek = previousMonday(now);
+      }
       const daysToSubtract = periodIndex * 7;
       start = sub(firstDayOfThisWeek, {days: daysToSubtract});
       end = nextSunday(start);
