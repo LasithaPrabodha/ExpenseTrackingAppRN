@@ -33,7 +33,7 @@ const createStyles = (colors: Colors) =>
       height: 18,
       borderRadius: 9,
       borderWidth: 2,
-      borderColor: 'white',
+      borderColor: colors.border,
     },
-    name: {color: 'white', fontSize: 16, marginLeft: 8},
+    name: {color: colors.text, fontSize: 16, marginLeft: 8},
   });

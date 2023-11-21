@@ -71,12 +71,13 @@ export const ExpensesScreen = (): JSX.Element => {
           renderItem={({item}) => (
             <TouchableHighlight
               style={styles.groupByItem}
+              underlayColor={colors.border}
               onPress={() => changeRecurrence(item)}>
               <Text
                 style={[
                   styles.groupBy,
                   {
-                    color: recurrence === item ? colors.primary : 'white',
+                    color: recurrence === item ? colors.primary : colors.text,
                   },
                 ]}>
                 This {getPlainRecurrence(item)}

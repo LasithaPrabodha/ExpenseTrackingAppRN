@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Alert, StyleSheet} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
@@ -6,6 +6,7 @@ import {ListItem} from '../components/ListItem';
 import {NavigationProp, useTheme} from '@react-navigation/native';
 import {Switch} from 'react-native';
 import {Theme} from '../types/theme';
+import {ThemeContext} from '../App';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -33,13 +34,9 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
       },
     );
   };
-  const [isDark, setIsDark] = useState(false);
-  const toggleSwitch = () => {
-    setIsDark(previousState => {
-      return !previousState;
-    });
-  };
   const {colors} = useTheme() as Theme;
+
+  const {setTheme, theme} = React.useContext(ThemeContext);
 
   return (
     <View style={styles.container}>
@@ -48,7 +45,7 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
         detail={
           <Entypo
             name="chevron-thin-right"
-            color="white"
+            color={colors.text}
             style={{opacity: 0.3}}
             size={20}
           />
@@ -65,8 +62,8 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
               false: colors.textSecondary,
               true: colors.primary,
             }}
-            onValueChange={toggleSwitch}
-            value={isDark}
+            onValueChange={isDark => setTheme(isDark ? 'dark' : 'light')}
+            value={theme === 'dark'}
           />
         }
       />

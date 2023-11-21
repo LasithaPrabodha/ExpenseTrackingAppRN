@@ -73,7 +73,7 @@ export const CategoriesScreen = (): JSX.Element => {
                       <RectButton
                         style={styles.categoryButton}
                         onPress={() => deleteCategory()}>
-                        <EvilIcons name="trash" size={40} color="white" />
+                        <EvilIcons name="trash" size={40} color={colors.text} />
                       </RectButton>
                     </View>
                   );
@@ -156,10 +156,10 @@ const createStyles = (colors: Colors) =>
       height: 32,
       borderRadius: 16,
       borderWidth: 3,
-      borderColor: 'white',
+      borderColor: colors.border,
     },
     newCategoryInput: {
-      color: 'white',
+      color: colors.text,
       height: 40,
       borderColor: colors.border,
       borderWidth: 1,

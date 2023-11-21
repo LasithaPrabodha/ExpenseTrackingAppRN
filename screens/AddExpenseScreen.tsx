@@ -81,7 +81,8 @@ export const AddExpenseScreen = (): JSX.Element => {
     clearForm();
   };
 
-  const {colors} = useTheme() as Theme;
+  const theme = useTheme() as Theme;
+  const {colors} = theme;
   const styles = createStyles(colors);
   return (
     <>
@@ -125,7 +126,7 @@ export const AddExpenseScreen = (): JSX.Element => {
                   value={new Date(date)}
                   mode={'date'}
                   is24Hour={true}
-                  themeVariant="dark"
+                  themeVariant={theme.dark ? 'dark' : 'light'}
                   maximumDate={new Date()}
                   minimumDate={
                     new Date(
@@ -188,6 +189,7 @@ export const AddExpenseScreen = (): JSX.Element => {
             renderItem={item => (
               <TouchableHighlight
                 style={styles.bottomSheetBtn}
+                underlayColor={colors.border}
                 onPress={() => selectRecurrence(item.item)}>
                 <Text style={styles.bottomSheetItem}>{item.item}</Text>
               </TouchableHighlight>
@@ -202,6 +204,7 @@ export const AddExpenseScreen = (): JSX.Element => {
             renderItem={({item}) => (
               <TouchableHighlight
                 style={styles.bottomSheetBtn}
+                underlayColor={colors.border}
                 onPress={() => selectCategory(item)}>
                 <View style={styles.categoryColorWrapper}>
                   <View
@@ -243,7 +246,7 @@ const createStyles = (colors: Colors) =>
     },
     amountText: {
       height: 40,
-      color: 'white',
+      color: colors.text,
       flex: 1,
       borderRadius: 8,
       paddingLeft: 8,
@@ -262,7 +265,7 @@ const createStyles = (colors: Colors) =>
     },
     noteTextInput: {
       height: 40,
-      color: 'white',
+      color: colors.text,
       flex: 1,
       borderRadius: 8,
       paddingLeft: 8,
@@ -283,7 +286,7 @@ const createStyles = (colors: Colors) =>
     },
     handle: {backgroundColor: '#FFFFFF55'},
     bottomSheetBtn: {paddingHorizontal: 18, paddingVertical: 12},
-    bottomSheetItem: {color: 'white', fontSize: 18},
+    bottomSheetItem: {color: colors.text, fontSize: 18},
     categoryColorWrapper: {
       display: 'flex',
       flexDirection: 'row',
@@ -294,7 +297,7 @@ const createStyles = (colors: Colors) =>
       height: 12,
       borderRadius: 6,
     },
-    category: {color: 'white', fontSize: 18, marginLeft: 12},
+    category: {color: colors.text, fontSize: 18, marginLeft: 12},
     dismissWrapper: {
       height: 44,
       display: 'flex',

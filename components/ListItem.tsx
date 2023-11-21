@@ -85,5 +85,5 @@ const createStyles = (colors: Colors) =>
       alignItems: 'center',
       width: 100,
     },
-    deleteText: {color: 'white'},
+    deleteText: {color: colors.text},
   });
