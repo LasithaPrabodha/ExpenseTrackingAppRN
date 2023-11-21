@@ -1,16 +1,19 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import {TabBarIcon} from '../components/TabBarIcon';
-import {theme} from '../theme';
 import React from 'react';
 import {ExpensesScreen} from './ExpensesScreen';
 import {AddExpenseScreen} from './AddExpenseScreen';
 import {SettingsScreen} from './SettingsScreen';
 import {StyleSheet} from 'react-native';
+import {Colors} from '../types/theme';
+import {useTheme} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 export const HomeScreen = (): JSX.Element => {
+  const theme = useTheme();
+  const styles = createStyles(theme.colors as Colors);
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -32,8 +35,9 @@ export const HomeScreen = (): JSX.Element => {
     </Tab.Navigator>
   );
 };
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: theme.colors.card,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    tabBar: {
+      backgroundColor: colors.card,
+    },
+  });

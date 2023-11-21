@@ -18,12 +18,13 @@ import {v4 as uuid} from 'uuid';
 import {ListItem} from '../components/ListItem';
 import {Recurrence} from '../types/recurrence';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {theme} from '../theme';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {addExpense} from '../redux/expensesSlice';
 import {Expense} from '../models/expense';
+import {Colors, Theme} from '../types/theme';
+import {useTheme} from '@react-navigation/native';
 
 export const AddExpenseScreen = (): JSX.Element => {
   const categories: Category[] = useSelector(
@@ -63,6 +64,10 @@ export const AddExpenseScreen = (): JSX.Element => {
   const submitExpense = () => {
     // add
 
+    if (!amount || !note) {
+      return;
+    }
+
     const expense = new Expense({
       id: uuid(),
       amount: parseFloat(amount),
@@ -71,10 +76,13 @@ export const AddExpenseScreen = (): JSX.Element => {
       note,
       category,
     });
+
     dispatch(addExpense(expense));
     clearForm();
   };
 
+  const {colors} = useTheme() as Theme;
+  const styles = createStyles(colors);
   return (
     <>
       <KeyboardAvoidingView
@@ -184,7 +192,7 @@ export const AddExpenseScreen = (): JSX.Element => {
                 <Text style={styles.bottomSheetItem}>{item.item}</Text>
               </TouchableHighlight>
             )}
-            style={{backgroundColor: theme.colors.card}}
+            style={{backgroundColor: colors.card}}
           />
         )}
         {sheetView === 'category' && (
@@ -206,7 +214,7 @@ export const AddExpenseScreen = (): JSX.Element => {
                 </View>
               </TouchableHighlight>
             )}
-            style={{backgroundColor: theme.colors.card}}
+            style={{backgroundColor: colors.card}}
           />
         )}
       </BottomSheet>
@@ -216,7 +224,7 @@ export const AddExpenseScreen = (): JSX.Element => {
             <MaterialIcons
               name="keyboard-hide"
               size={28}
-              style={{color: theme.colors.primary}}
+              style={{color: colors.primary}}
             />
           </TouchableOpacity>
         </View>
@@ -225,79 +233,80 @@ export const AddExpenseScreen = (): JSX.Element => {
   );
 };
 
-const styles = StyleSheet.create({
-  keyboardAvoidView: {margin: 16, flex: 1, alignItems: 'center'},
-  newExpenseForm: {
-    borderRadius: 11,
-    overflow: 'hidden',
-    width: '100%',
-  },
-  amountText: {
-    height: 40,
-    color: 'white',
-    flex: 1,
-    borderRadius: 8,
-    paddingLeft: 8,
-    fontSize: 16,
-  },
-  recurrenceBtn: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  recurrence: {
-    color: theme.colors.primary,
-    textTransform: 'capitalize',
-    fontSize: 16,
-  },
-  noteTextInput: {
-    height: 40,
-    color: 'white',
-    flex: 1,
-    borderRadius: 8,
-    paddingLeft: 8,
-    fontSize: 16,
-  },
-  submitBtn: {
-    backgroundColor: theme.colors.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 13,
-    borderRadius: 10,
-    marginTop: 32,
-  },
-  submitBtnText: {color: 'white', fontWeight: '600', fontSize: 17},
-  bottomSheetHandle: {
-    backgroundColor: theme.colors.card,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  handle: {backgroundColor: '#FFFFFF55'},
-  bottomSheetBtn: {paddingHorizontal: 18, paddingVertical: 12},
-  bottomSheetItem: {color: 'white', fontSize: 18},
-  categoryColorWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  categoryColor: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  category: {color: 'white', fontSize: 18, marginLeft: 12},
-  dismissWrapper: {
-    height: 44,
-    display: 'flex',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    alignItems: 'flex-end',
-    backgroundColor: theme.colors.card,
-    borderTopColor: theme.colors.border,
-    borderTopWidth: 1,
-  },
-  categoryText: {
-    textTransform: 'capitalize',
-    fontSize: 16,
-  },
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    keyboardAvoidView: {margin: 16, flex: 1, alignItems: 'center'},
+    newExpenseForm: {
+      borderRadius: 11,
+      overflow: 'hidden',
+      width: '100%',
+    },
+    amountText: {
+      height: 40,
+      color: 'white',
+      flex: 1,
+      borderRadius: 8,
+      paddingLeft: 8,
+      fontSize: 16,
+    },
+    recurrenceBtn: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    recurrence: {
+      color: colors.primary,
+      textTransform: 'capitalize',
+      fontSize: 16,
+    },
+    noteTextInput: {
+      height: 40,
+      color: 'white',
+      flex: 1,
+      borderRadius: 8,
+      paddingLeft: 8,
+      fontSize: 16,
+    },
+    submitBtn: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 20,
+      paddingVertical: 13,
+      borderRadius: 10,
+      marginTop: 32,
+    },
+    submitBtnText: {color: 'white', fontWeight: '600', fontSize: 17},
+    bottomSheetHandle: {
+      backgroundColor: colors.card,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
+    },
+    handle: {backgroundColor: '#FFFFFF55'},
+    bottomSheetBtn: {paddingHorizontal: 18, paddingVertical: 12},
+    bottomSheetItem: {color: 'white', fontSize: 18},
+    categoryColorWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    categoryColor: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+    },
+    category: {color: 'white', fontSize: 18, marginLeft: 12},
+    dismissWrapper: {
+      height: 44,
+      display: 'flex',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+      alignItems: 'flex-end',
+      backgroundColor: colors.card,
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+    },
+    categoryText: {
+      textTransform: 'capitalize',
+      fontSize: 16,
+    },
+  });

@@ -1,7 +1,8 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {theme} from '../theme';
+import {useTheme} from '@react-navigation/native';
+import {Colors, Theme} from '../types/theme';
 
 type Props = {
   label: string;
@@ -20,6 +21,9 @@ export const ListItem = ({
   onDelete,
   isDestructive,
 }: Props) => {
+  const {colors} = useTheme() as Theme;
+  const styles = createStyles(colors);
+
   const item = useMemo(
     () => (
       <TouchableOpacity
@@ -32,14 +36,14 @@ export const ListItem = ({
         <Text
           style={[
             styles.itemText,
-            {color: isDestructive ? theme.colors.error : 'white'},
+            {color: isDestructive ? colors.error : colors.text},
           ]}>
           {label}
         </Text>
         {detail}
       </TouchableOpacity>
     ),
-    [label, detail, onClick, isDestructive],
+    [label, detail, onClick, isDestructive, colors, styles],
   );
   if (swipeToDelete) {
     return (
@@ -59,26 +63,27 @@ export const ListItem = ({
   return item;
 };
 
-const styles = StyleSheet.create({
-  itemWrapper: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    itemWrapper: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
 
-    alignItems: 'center',
-    minHeight: 44,
-    paddingHorizontal: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    backgroundColor: theme.colors.card,
-  },
-  itemText: {
-    fontSize: 16,
-  },
-  deleteButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-  },
-  deleteText: {color: 'white'},
-});
+      alignItems: 'center',
+      minHeight: 44,
+      paddingHorizontal: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      backgroundColor: colors.card,
+    },
+    itemText: {
+      fontSize: 16,
+    },
+    deleteButton: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: 100,
+    },
+    deleteText: {color: 'white'},
+  });

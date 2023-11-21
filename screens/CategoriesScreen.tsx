@@ -14,22 +14,25 @@ import {ColorPicker, fromHsv} from 'react-native-color-picker';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {v4 as uuid} from 'uuid';
 
-import {theme} from '../theme';
 import {RectButton, TouchableOpacity} from 'react-native-gesture-handler';
 import {CategoryRow} from '../components/CategoryRow';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {addCategory} from '../redux/categoriesSlice';
+import {Colors, Theme} from '../types/theme';
+import {useTheme} from '@react-navigation/native';
 
 export const CategoriesScreen = (): JSX.Element => {
   const categories: Category[] = useSelector(
     (state: RootState) => state.categories.categories,
   );
   const dispatch = useDispatch();
+  const {colors} = useTheme() as Theme;
+  const styles = createStyles(colors);
 
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [selectedColor, setSelectedColor] = useState(theme.colors.primary);
+  const [selectedColor, setSelectedColor] = useState(colors.primary);
   const [newName, setNewName] = useState('');
 
   const onSelectColor = (hex: string) => {
@@ -48,7 +51,7 @@ export const CategoriesScreen = (): JSX.Element => {
     });
     dispatch(addCategory(category));
     setNewName('');
-    setSelectedColor(theme.colors.primary);
+    setSelectedColor(colors.primary);
   };
 
   const deleteCategory = () => {};
@@ -94,13 +97,13 @@ export const CategoriesScreen = (): JSX.Element => {
           </TouchableOpacity>
           <TextInput
             placeholder="Category name"
-            placeholderTextColor={theme.colors.textSecondary}
+            placeholderTextColor={colors.textSecondary}
             onChange={event => setNewName(event.nativeEvent.text)}
             value={newName}
             style={styles.newCategoryInput}
           />
           <TouchableOpacity onPress={createCategory} style={styles.sendButton}>
-            <FontAwesome name="plus" size={24} color={theme.colors.primary} />
+            <FontAwesome name="plus" size={24} color={colors.primary} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -125,62 +128,63 @@ export const CategoriesScreen = (): JSX.Element => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  keyAvoidView: {margin: 16, flex: 1},
-  scrollView: {flex: 1},
-  categoriesWrapper: {
-    borderRadius: 11,
-    overflow: 'hidden',
-  },
-  categoryItemWrapper: {
-    backgroundColor: theme.colors.error,
-    width: 75,
-  },
-  categoryButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  newCategoryWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingVertical: 8,
-  },
-  categoryColor: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 3,
-    borderColor: 'white',
-  },
-  newCategoryInput: {
-    color: 'white',
-    height: 40,
-    borderColor: theme.colors.border,
-    borderWidth: 1,
-    flex: 1,
-    borderRadius: 8,
-    paddingLeft: 8,
-    marginLeft: 16,
-  },
-  colorPickerModal: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  colorPickerWrapper: {
-    padding: 24,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.colors.card,
-    overflow: 'hidden',
-    borderRadius: 12,
-  },
-  colorPicker: {width: '100%', height: 300},
-  sendButton: {padding: 12},
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    keyAvoidView: {margin: 16, flex: 1},
+    scrollView: {flex: 1},
+    categoriesWrapper: {
+      borderRadius: 11,
+      overflow: 'hidden',
+    },
+    categoryItemWrapper: {
+      backgroundColor: colors.error,
+      width: 75,
+    },
+    categoryButton: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    newCategoryWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 8,
+    },
+    categoryColor: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      borderWidth: 3,
+      borderColor: 'white',
+    },
+    newCategoryInput: {
+      color: 'white',
+      height: 40,
+      borderColor: colors.border,
+      borderWidth: 1,
+      flex: 1,
+      borderRadius: 8,
+      paddingLeft: 8,
+      marginLeft: 16,
+    },
+    colorPickerModal: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 24,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    colorPickerWrapper: {
+      padding: 24,
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.card,
+      overflow: 'hidden',
+      borderRadius: 12,
+    },
+    colorPicker: {width: '100%', height: 300},
+    sendButton: {padding: 12},
+  });

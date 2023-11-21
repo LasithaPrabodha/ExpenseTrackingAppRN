@@ -28,7 +28,6 @@ export default function App(): JSX.Element {
             />
             <Stack.Screen
               options={{
-                title: '',
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: theme.colors.background,

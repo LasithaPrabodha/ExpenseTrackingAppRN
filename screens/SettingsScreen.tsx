@@ -3,9 +3,9 @@ import {View, Alert, StyleSheet} from 'react-native';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 import {ListItem} from '../components/ListItem';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useTheme} from '@react-navigation/native';
 import {Switch} from 'react-native';
-import {theme} from '../theme';
+import {Theme} from '../types/theme';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -33,8 +33,13 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
       },
     );
   };
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [isDark, setIsDark] = useState(false);
+  const toggleSwitch = () => {
+    setIsDark(previousState => {
+      return !previousState;
+    });
+  };
+  const {colors} = useTheme() as Theme;
 
   return (
     <View style={styles.container}>
@@ -57,11 +62,11 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
         detail={
           <Switch
             trackColor={{
-              false: theme.colors.textSecondary,
-              true: theme.colors.primary,
+              false: colors.textSecondary,
+              true: colors.primary,
             }}
             onValueChange={toggleSwitch}
-            value={isEnabled}
+            value={isDark}
           />
         }
       />

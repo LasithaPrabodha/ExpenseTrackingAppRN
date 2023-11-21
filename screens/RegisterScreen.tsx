@@ -7,10 +7,10 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import {theme} from '../theme';
 import {Button} from 'react-native';
-import {NavigationProp} from '@react-navigation/native';
+import {NavigationProp, useTheme} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
+import {Colors, Theme} from '../types/theme';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -18,6 +18,8 @@ interface RouterProps {
 
 export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
   const [currentFocus, setCurrentFocus] = useState('');
+  const {colors} = useTheme() as Theme;
+  const styles = createStyles(colors as Colors);
   return (
     <>
       <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoid}>
@@ -96,11 +98,11 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
         </View>
       </KeyboardAvoidingView>
       <View style={styles.signupLine}>
-        <Text style={{color: theme.colors.text, marginRight: 4}}>
+        <Text style={{color: colors.text, marginRight: 4}}>
           Already have an account?
         </Text>
         <Pressable onPress={() => navigation.navigate('LoginScreen')}>
-          <Text style={{color: theme.colors.primary}}>Login</Text>
+          <Text style={{color: colors.primary}}>Login</Text>
         </Pressable>
       </View>
       <InputAccessoryView nativeID="dismissKeyboard">
@@ -109,7 +111,7 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
             <MaterialIcon
               name="keyboard-hide"
               size={28}
-              style={{color: theme.colors.primary}}
+              style={{color: colors.primary}}
             />
           </TouchableOpacity>
         </View>
@@ -118,58 +120,59 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 40,
-    justifyContent: 'center',
-  },
-  keyboardAvoid: {margin: 16, flex: 1, alignItems: 'center'},
-  loginText: {
-    color: theme.colors.text,
-    fontSize: 40,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: 40,
+      justifyContent: 'center',
+    },
+    keyboardAvoid: {margin: 16, flex: 1, alignItems: 'center'},
+    loginText: {
+      color: colors.text,
+      fontSize: 40,
+      fontWeight: 'bold',
+      marginBottom: 8,
+    },
 
-  inputWrapper: {
-    marginTop: 12,
-    backgroundColor: theme.colors.background,
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    width: '100%',
+    inputWrapper: {
+      marginTop: 12,
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 12,
+      width: '100%',
 
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 12,
-  },
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 12,
+    },
 
-  inputShadow: {
-    shadowColor: '#1F51FF',
-    shadowOffset: {width: 2, height: 6},
-    shadowOpacity: 0.75,
-    shadowRadius: 8,
-  },
-  text: {
-    width: '100%',
-    fontSize: 16,
-    color: theme.colors.text,
-  },
-  signupLine: {
-    paddingBottom: 60,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  dismissWrapper: {
-    height: 44,
-    display: 'flex',
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-    alignItems: 'flex-end',
-    backgroundColor: theme.colors.card,
-    borderTopColor: theme.colors.border,
-    borderTopWidth: 1,
-  },
-});
+    inputShadow: {
+      shadowColor: '#1F51FF',
+      shadowOffset: {width: 2, height: 6},
+      shadowOpacity: 0.75,
+      shadowRadius: 8,
+    },
+    text: {
+      width: '100%',
+      fontSize: 16,
+      color: colors.text,
+    },
+    signupLine: {
+      paddingBottom: 60,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    dismissWrapper: {
+      height: 44,
+      display: 'flex',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+      alignItems: 'flex-end',
+      backgroundColor: colors.card,
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+    },
+  });

@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import {getPlainRecurrence} from '../utils/recurrence';
-import {theme} from '../theme';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {Recurrence} from '../types/recurrence';
 import {ExpensesList} from '../components/ExpensesList';
@@ -15,11 +14,15 @@ import {getGroupedExpenses} from '../utils/expenses';
 import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {Expense} from '../models/expense';
+import {useTheme} from '@react-navigation/native';
+import {Colors, Theme} from '../types/theme';
 
 export const ExpensesScreen = (): JSX.Element => {
   const expenses: Expense[] = useSelector(
     (state: RootState) => state.expenses.expenses,
   );
+  const {colors} = useTheme() as Theme;
+  const styles = createStyles(colors);
   const [recurrence, setRecurrence] = useState(Recurrence.Weekly);
   const recurrenceSheetRef = useRef<BottomSheet>(null);
 
@@ -58,7 +61,7 @@ export const ExpensesScreen = (): JSX.Element => {
         enablePanDownToClose
         snapPoints={['25%', '50%']}>
         <BottomSheetFlatList
-          style={{backgroundColor: theme.colors.card}}
+          style={{backgroundColor: colors.card}}
           data={[
             Recurrence.Daily,
             Recurrence.Weekly,
@@ -73,7 +76,7 @@ export const ExpensesScreen = (): JSX.Element => {
                 style={[
                   styles.groupBy,
                   {
-                    color: recurrence === item ? theme.colors.primary : 'white',
+                    color: recurrence === item ? colors.primary : 'white',
                   },
                 ]}>
                 This {getPlainRecurrence(item)}
@@ -85,54 +88,55 @@ export const ExpensesScreen = (): JSX.Element => {
     </>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'scroll',
-    paddingHorizontal: 16,
-    width: '100%',
-    paddingTop: 16,
-  },
-  totalWrapper: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  totalLabel: {color: theme.colors.textPrimary, fontSize: 17},
-  amountWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    width: '100%',
-    marginBottom: 16,
-  },
-  currency: {
-    color: theme.colors.textSecondary,
-    fontSize: 17,
-    marginTop: 2,
-  },
-  amount: {
-    color: theme.colors.textPrimary,
-    fontSize: 40,
-    fontWeight: '600',
-    marginLeft: 2,
-  },
-  bottomSheetHandleStyle: {
-    backgroundColor: theme.colors.card,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  handle: {backgroundColor: '#FFFFFF55'},
-  groupBy: {
-    fontSize: 18,
-    textTransform: 'capitalize',
-  },
-  groupByItem: {paddingHorizontal: 18, paddingVertical: 12},
-  groupByLabel: {color: theme.colors.primary, fontSize: 17},
-  groupByFilter: {marginLeft: 16},
-});
+const createStyles = (colors: Colors) =>
+  StyleSheet.create({
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'scroll',
+      paddingHorizontal: 16,
+      width: '100%',
+      paddingTop: 16,
+    },
+    totalWrapper: {
+      display: 'flex',
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 16,
+    },
+    totalLabel: {color: colors.textPrimary, fontSize: 17},
+    amountWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'center',
+      width: '100%',
+      marginBottom: 16,
+    },
+    currency: {
+      color: colors.textSecondary,
+      fontSize: 17,
+      marginTop: 2,
+    },
+    amount: {
+      color: colors.textPrimary,
+      fontSize: 40,
+      fontWeight: '600',
+      marginLeft: 2,
+    },
+    bottomSheetHandleStyle: {
+      backgroundColor: colors.card,
+      borderTopLeftRadius: 12,
+      borderTopRightRadius: 12,
+    },
+    handle: {backgroundColor: '#FFFFFF55'},
+    groupBy: {
+      fontSize: 18,
+      textTransform: 'capitalize',
+    },
+    groupByItem: {paddingHorizontal: 18, paddingVertical: 12},
+    groupByLabel: {color: colors.primary, fontSize: 17},
+    groupByFilter: {marginLeft: 16},
+  });
