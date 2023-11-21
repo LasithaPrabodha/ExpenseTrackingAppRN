@@ -1,14 +1,14 @@
 export default {
-  dark: true,
+  dark: false,
   colors: {
-    primary: '#0A84FF',
-    background: '#000000',
-    card: '#151515',
-    text: '#FFFFFF',
-    border: '#262629',
-    notification: '#0A84FF',
+    background: 'rgb(242, 242, 242)',
+    border: 'rgb(216, 216, 216)',
+    card: 'rgb(255, 255, 255)',
+    notification: 'rgb(255, 59, 48)',
+    primary: 'rgb(0, 122, 255)',
+    text: 'rgb(28, 28, 30)',
     error: '#FF453A',
-    textPrimary: '#FFFFFF',
-    textSecondary: '#EBEBF599',
+    textPrimary: '#3A3A3A',
+    textSecondary: '#9A9A9A',
   },
 };
