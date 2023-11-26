@@ -10,9 +10,10 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {ListItem} from '../components/ListItem';

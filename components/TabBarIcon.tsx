@@ -1,7 +1,7 @@
 import React from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ADI from 'react-native-vector-icons/AntDesign';
-import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import ADI from '@expo/vector-icons/AntDesign';
+import MCI from '@expo/vector-icons/MaterialCommunityIcons';
 
 type TabBarIconProps = {
   color: string;

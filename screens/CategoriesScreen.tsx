@@ -9,9 +9,10 @@ import {
   View,
 } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {ColorPicker, fromHsv} from 'react-native-color-picker';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {RectButton, TouchableOpacity} from 'react-native-gesture-handler';

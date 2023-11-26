@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Alert, StyleSheet} from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
+import Entypo from '@expo/vector-icons/Entypo';
 
 import {ListItem} from '../components/ListItem';
 import {NavigationProp, useTheme} from '@react-navigation/native';
 import {Switch} from 'react-native';
 import {Theme} from '../types/theme';
-import {ThemeContext} from '../App';
+import { ThemeContext } from '../theme/context';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
