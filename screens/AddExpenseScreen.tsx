@@ -88,7 +88,7 @@ export const AddExpenseScreen = (): JSX.Element => {
   return (
     <>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior="height"
         keyboardVerticalOffset={112}
         style={styles.keyboardAvoidView}>
         <View style={styles.newExpenseForm}>
@@ -222,17 +222,19 @@ export const AddExpenseScreen = (): JSX.Element => {
           />
         )}
       </BottomSheet>
-      <InputAccessoryView nativeID="dismissKeyboard">
-        <View style={styles.dismissWrapper}>
-          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-            <MaterialIcons
-              name="keyboard-hide"
-              size={28}
-              style={{color: colors.primary}}
-            />
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcons
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };

@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import {
   Button,
+  InputAccessoryView,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -23,6 +26,7 @@ import {RootState} from '../redux/store';
 import {addCategory} from '../redux/categoriesSlice';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export const CategoriesScreen = (): JSX.Element => {
   const categories: Category[] = useSelector(
@@ -61,7 +65,7 @@ export const CategoriesScreen = (): JSX.Element => {
     <>
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={112}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 112 : -220}
         style={styles.keyAvoidView}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.categoriesWrapper}>
@@ -98,6 +102,7 @@ export const CategoriesScreen = (): JSX.Element => {
           </TouchableOpacity>
           <TextInput
             placeholder="Category name"
+            inputAccessoryViewID="dismissKeyboard"
             placeholderTextColor={colors.textSecondary}
             onChange={event => setNewName(event.nativeEvent.text)}
             value={newName}
@@ -126,6 +131,19 @@ export const CategoriesScreen = (): JSX.Element => {
           </View>
         </View>
       </Modal>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcons
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };
@@ -188,4 +206,14 @@ const createStyles = (colors: Colors) =>
     },
     colorPicker: {width: '100%', height: 300},
     sendButton: {padding: 12},
+    dismissWrapper: {
+      height: 44,
+      display: 'flex',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+      alignItems: 'flex-end',
+      backgroundColor: colors.card,
+      borderTopColor: colors.border,
+      borderTopWidth: 1,
+    },
   });

@@ -3,6 +3,7 @@ import {
   Button,
   InputAccessoryView,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -28,7 +29,7 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
   const styles = createStyles(colors);
   return (
     <>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoid}>
+      <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
         <View style={styles.moneyIconWrapper}>
           <Fontisto
             style={styles.moneyIcon}
@@ -91,17 +92,19 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
           <Text style={{color: colors.primary}}>Sign up</Text>
         </Pressable>
       </View>
-      <InputAccessoryView nativeID="dismissKeyboard">
-        <View style={styles.dismissWrapper}>
-          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-            <MaterialIcons
-              name="keyboard-hide"
-              size={28}
-              style={{color: colors.primary}}
-            />
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcons
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };

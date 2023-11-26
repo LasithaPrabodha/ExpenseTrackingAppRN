@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {InputAccessoryView, Keyboard, Pressable, View} from 'react-native';
+import {InputAccessoryView, Keyboard, Platform, Pressable, View} from 'react-native';
 import {TextInput} from 'react-native';
 import {KeyboardAvoidingView, Text} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -22,7 +22,7 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
   const styles = createStyles(colors as Colors);
   return (
     <>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoid}>
+      <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
         <View style={styles.container}>
           <Text style={styles.loginText}>Create Account</Text>
 
@@ -105,17 +105,19 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
           <Text style={{color: colors.primary}}>Login</Text>
         </Pressable>
       </View>
-      <InputAccessoryView nativeID="dismissKeyboard">
-        <View style={styles.dismissWrapper}>
-          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-            <MaterialIcon
-              name="keyboard-hide"
-              size={28}
-              style={{color: colors.primary}}
-            />
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcon
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };
