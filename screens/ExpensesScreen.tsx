@@ -1,11 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import {getPlainRecurrence} from '../utils/recurrence';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {Recurrence} from '../types/recurrence';

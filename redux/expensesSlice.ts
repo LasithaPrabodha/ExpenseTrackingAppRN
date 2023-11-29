@@ -12,30 +12,16 @@ const now = new Date(
 );
 
 const initialState: ExpensesState = {
-  expenses: [
-    new Expense({
-      id: '1',
-      amount: 10,
-      recurrence: Recurrence.Daily,
-      date: now,
-      note: 'Dollarama',
-      category: new Category({id: '1', color: '#ff0000', name: 'Anan Manan'}),
-    }),
-    new Expense({
-      id: '2',
-      amount: 20,
-      recurrence: Recurrence.Daily,
-      date: now,
-      note: 'Tim Hortons',
-      category: new Category({id: '2', color: '#00ff00', name: 'Coffee'}),
-    }),
-  ],
+  expenses: [],
 };
 
 const expensesSlice = createSlice({
   name: 'expenses',
   initialState,
   reducers: {
+    setExpense: (state, action) => {
+      state.expenses = action.payload
+    },
     addExpense: (state, action: PayloadAction<Expense>) => {
       state.expenses.push(action.payload);
     },
@@ -57,5 +43,5 @@ const expensesSlice = createSlice({
   },
 });
 
-export const {addExpense, removeExpense, updateExpense} = expensesSlice.actions;
+export const {setExpense, addExpense, removeExpense, updateExpense} = expensesSlice.actions;
 export default expensesSlice.reducer;

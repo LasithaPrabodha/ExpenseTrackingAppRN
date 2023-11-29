@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
-
+import * as database from '../database'
 import {ExpensesGroup} from '../types/expenses-group';
 import {ExpenseRow} from './ExpenseRow';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { setExpense } from '../redux/expensesSlice';
 
 type Props = {
   groups: ExpensesGroup[];
@@ -13,6 +15,17 @@ type Props = {
 export const ExpensesList = ({groups}: Props) => {
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
+
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    (async ()=>{
+      const data = await database.load()
+      console.log(data)
+
+      dispatch(setExpense(data))
+    })()
+    }, [])
 
   return (
     <FlatList
