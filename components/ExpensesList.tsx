@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {View, Text, FlatList, StyleSheet, ActivityIndicator} from 'react-native';
 import * as database from '../database'
 import {ExpensesGroup} from '../types/expenses-group';
 import {ExpenseRow} from './ExpenseRow';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setExpense } from '../redux/expensesSlice';
+import { RootState } from '../redux/store';
 
 type Props = {
   groups: ExpensesGroup[];
@@ -15,17 +16,33 @@ type Props = {
 export const ExpensesList = ({groups}: Props) => {
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
-
   const dispatch = useDispatch()
+  const expenses = useSelector((state: RootState) => state.expenses.expenses);
+  const [loading, setLoading] = useState(true);
 
   useEffect(()=>{
     (async ()=>{
-      const data = await database.load()
-      console.log(data)
+      try{
+        setLoading(true)
+        const data = (await database.load()).map(item=> ({...item, date: new Date(item.date)}))
 
-      dispatch(setExpense(data))
+        dispatch(setExpense(data));
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching expenses:', err)
+      }
     })()
     }, [])
+
+    if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large"/>
+        <Text style={styles.loadingText}>Saving data!</Text>
+        <Text style={styles.loadingText}>Please wait...</Text>
+      </View>
+      );
+    }
 
   return (
     <FlatList
@@ -85,4 +102,13 @@ const createStyles = (colors: Colors) =>
       color: colors.textSecondary,
       fontWeight: '600',
     },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    loadingText: {
+      fontSize: 20,
+      marginTop:10
+    }
   });
