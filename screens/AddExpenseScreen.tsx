@@ -15,7 +15,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
-
 import {ListItem} from '../components/ListItem';
 import {Recurrence} from '../types/recurrence';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -26,6 +25,7 @@ import {addExpense} from '../redux/expensesSlice';
 import {Expense} from '../models/expense';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
+import * as database from '../database'
 
 export const AddExpenseScreen = (): JSX.Element => {
   const categories: Category[] = useSelector(
@@ -62,7 +62,7 @@ export const AddExpenseScreen = (): JSX.Element => {
     setCategory(categories[0]);
   };
 
-  const submitExpense = () => {
+  const submitExpense = async () => {
     // add
 
     if (!amount || !note) {
@@ -77,11 +77,12 @@ export const AddExpenseScreen = (): JSX.Element => {
       note,
       category,
     });
-
+    const id = await database.save(expense)
+    console.log('Id', id)
     dispatch(addExpense(expense));
     clearForm();
   };
-
+  
   const theme = useTheme() as Theme;
   const {colors} = theme;
   const styles = createStyles(colors);
