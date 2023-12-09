@@ -7,6 +7,8 @@ import {NavigationProp, useTheme} from '@react-navigation/native';
 import {Switch} from 'react-native';
 import {Theme} from '../types/theme';
 import { ThemeContext } from '../theme/context';
+import { signOut } from 'firebase/auth';
+import { firebase_auth } from '../database/config';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -37,6 +39,18 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
   const {colors} = useTheme() as Theme;
 
   const {setTheme, theme} = React.useContext(ThemeContext);
+
+  const auth = firebase_auth
+  
+  const logOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigation.navigate('LoginScreen');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -75,7 +89,7 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
       <ListItem
         isDestructive
         label="Log Out"
-        onClick={() => navigation.navigate('LoginScreen')}
+        onClick={() => logOut()}
       />
     </View>
   );
