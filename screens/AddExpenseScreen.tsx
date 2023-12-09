@@ -115,8 +115,8 @@ export const AddExpenseScreen = (): JSX.Element => {
 
     Toast.show({
       type: 'success',
-      text1: 'Added',
-      text2: 'A new expense added! ✅',
+      text1: 'Added ✅',
+      text2: 'A new expense added!',
     });
   };
 
