@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, Pressable, Alert} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Alert, Animated, Touchable} from 'react-native';
 
 import {Expense} from '../models/expense';
 import {useTheme} from '@react-navigation/native';
@@ -7,6 +7,9 @@ import {Colors, Theme} from '../types/theme';
 import * as database from '../database'
 import { removeExpense } from '../redux/expensesSlice';
 import { useDispatch } from 'react-redux';
+import { Swipeable } from 'react-native-gesture-handler';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+
 
 type Props = {
   expense: Expense;
@@ -32,8 +35,20 @@ export const ExpenseRow = ({expense}: Props) => {
     )
   }
 
+const leftSwipe = () => {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={() =>handleRemovePress()} style={styles.deleteBox}>
+      <View >
+        <Animated.Text style={styles.animatedText}>Delete</Animated.Text>
+      </View>
+    </TouchableOpacity>
+    
+  )
+}
+
+  return (
+    <Swipeable renderLeftActions={leftSwipe}>
+      <View style={styles.container}>
       <View style={styles.itemWrapper}>
         <Text style={styles.item}>{expense.note}</Text>
         <Text style={styles.amount}>USD {expense.amount}</Text>
@@ -55,12 +70,9 @@ export const ExpenseRow = ({expense}: Props) => {
           {`${expense.date.getMinutes()}`.padStart(2, '0')}
         </Text>
       </View>
-      <View>
-        <Pressable style={styles.removeButton} onPress={handleRemovePress}>
-          <Text style={styles.removeButtonText}>Delete</Text>
-        </Pressable>
-      </View>
     </View>
+    </Swipeable>
+    
   );
 };
 
@@ -100,14 +112,19 @@ const createStyles = (colors: Colors) =>
     categoryText: {fontSize: 13},
     date: {fontSize: 17, color: colors.textSecondary
     },
-    removeButton: {
-      padding: 5,
-      alignItems: 'center',
+    deleteBox: {
+      backgroundColor: 'red',
+      justifyContent: 'center',
+      width: 70,
       borderRadius: 5,
-      marginLeft: 'auto',
+      alignItems: 'center',
+      paddingVertical: 8,
+      marginRight: 10
     },
-    removeButtonText: {
-      color: 'red',
-      fontSize: 14,
+    animatedText:{
+      color: 'white',
+      fontSize: 10,
+      fontWeight: 'bold',
+      textAlign: 'center'
     }
   });
