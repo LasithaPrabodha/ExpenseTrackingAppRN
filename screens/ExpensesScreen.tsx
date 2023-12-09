@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,16 +11,18 @@ import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {Recurrence} from '../types/recurrence';
 import {ExpensesList} from '../components/ExpensesList';
 import {getGroupedExpenses} from '../utils/expenses';
-import {useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch} from '../redux/store';
 import {Expense} from '../models/expense';
 import {useTheme} from '@react-navigation/native';
 import {Colors, Theme} from '../types/theme';
+import {fetchExpensesAction} from '../redux/actions/expenseActions';
+import {allExpensesSelector} from '../redux/selectors';
 
 export const ExpensesScreen = (): JSX.Element => {
-  const expenses: Expense[] = useSelector(
-    (state: RootState) => state.expenses.expenses,
-  );
+  const expenses: Expense[] = useSelector(allExpensesSelector);
+
+  const dispatch = useDispatch<AppDispatch>();
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
   const [recurrence, setRecurrence] = useState(Recurrence.Weekly);
@@ -33,6 +35,10 @@ export const ExpensesScreen = (): JSX.Element => {
     setRecurrence(newRecurrence);
     recurrenceSheetRef.current?.close();
   };
+
+  useEffect(() => {
+    dispatch(fetchExpensesAction());
+  }, [dispatch]);
 
   return (
     <>
