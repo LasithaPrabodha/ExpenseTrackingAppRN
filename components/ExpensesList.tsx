@@ -25,7 +25,6 @@ export const ExpensesList = ({groups}: Props) => {
       try{
         setLoading(true)
         const data = (await database.load()).map(item=> ({...item, date: new Date(item.date)}))
-
         dispatch(setExpense(data));
         setLoading(false);
       } catch (err) {

@@ -72,6 +72,11 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
         label="Erase all data"
         onClick={() => onClickErase()}
       />
+      <ListItem
+        isDestructive
+        label="Log Out"
+        onClick={() => navigation.navigate('LoginScreen')}
+      />
     </View>
   );
 };

@@ -11,6 +11,8 @@ import {Button} from 'react-native';
 import {NavigationProp, useTheme} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
 import {Colors, Theme} from '../types/theme';
+import { firebase_auth } from '../database/config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -20,6 +22,25 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
   const [currentFocus, setCurrentFocus] = useState('');
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors as Colors);
+
+  const auth = firebase_auth
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const register = async () => {
+    try{
+      if(password === confirmPassword) {
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        navigation.navigate('HomeScreen')
+      }
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
@@ -34,6 +55,8 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <Feather name="user" color={'grey'} size={24} />
               <TextInput
+                value={name}
+                onChangeText={(text) => setName(text)}
                 onFocus={() => setCurrentFocus('username')}
                 placeholder="Your name"
                 keyboardType="default"
@@ -49,6 +72,8 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <Ionicon name="mail-outline" color={'grey'} size={24} />
               <TextInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
                 onFocus={() => setCurrentFocus('email')}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -65,6 +90,8 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <SimpleLineIcon name="lock" color={'grey'} size={24} />
               <TextInput
+                value={password}
+                onChangeText={(text) => setPassword(text)}
                 secureTextEntry={true}
                 onFocus={() => setCurrentFocus('password')}
                 placeholder="Password"
@@ -80,6 +107,8 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <SimpleLineIcon name="lock" color={'grey'} size={24} />
               <TextInput
+                value={confirmPassword}
+                onChangeText={(text) => setConfirmPassword(text)}
                 secureTextEntry={true}
                 onFocus={() => setCurrentFocus('cpassword')}
                 placeholder="Confirm password"
@@ -92,7 +121,7 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
           <View style={{marginTop: 24, alignItems: 'flex-end'}}>
             <Button
               title="Sign up"
-              onPress={() => navigation.navigate('HomeScreen')}
+              onPress={() => register()}
             />
           </View>
         </View>

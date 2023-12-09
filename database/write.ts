@@ -29,8 +29,10 @@ export async function remove(id: string){
     try {
         const docRef = doc(db, 'expenseList', id)
         await deleteDoc(docRef)
+        console.log('Expense removed successfully from the database', id)
         return true
     } catch (e) {
+        console.error('Error removing expense:', e)
         return false
     }
     

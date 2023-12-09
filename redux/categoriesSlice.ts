@@ -10,6 +10,10 @@ const initialState: CategoriesState = {
   categories: [
     new Category({id: '1', color: '#ff0000', name: 'Anan Manan'}),
     new Category({id: '2', color: '#00ff00', name: 'Coffee'}),
+    new Category({id: '3', color: '#0000FF', name: 'Party'}),
+    new Category({id: '4', color: '#800080', name: 'Studies'}),
+    new Category({id: '5', color: '#953553', name: 'Supplies'}),
+    new Category({id: '6', color: '#722F37', name: 'Transportation'}),
   ],
 };
 
