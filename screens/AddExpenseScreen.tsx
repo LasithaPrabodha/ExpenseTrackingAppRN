@@ -26,7 +26,7 @@ import {Recurrence} from '../types/recurrence';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../redux/store';
+import {AppDispatch} from '../redux/store';
 import {Expense} from '../models/expense';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
@@ -74,12 +74,12 @@ export const AddExpenseScreen = (): JSX.Element => {
     setNote('');
     setCategory(categories[0]);
   };
+  
   const onChangeAndroidDate = (timestamp?: number) => {
     setDate(new Date(timestamp ?? new Date()));
   };
 
   const submitExpense = () => {
-    // add
 
     if (!amount || !note) {
       Alert.alert(
@@ -112,7 +112,7 @@ export const AddExpenseScreen = (): JSX.Element => {
     dispatch(addExpenseAction(expense));
     clearForm();
 
-    Keyboard.dismiss()
+    Keyboard.dismiss();
   };
 
   const theme = useTheme() as Theme;

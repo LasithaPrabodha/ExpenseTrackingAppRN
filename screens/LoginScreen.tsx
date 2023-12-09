@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Button,
   InputAccessoryView,
   KeyboardAvoidingView,
@@ -18,6 +19,8 @@ import SimpleLineIcon from '@expo/vector-icons/SimpleLineIcons';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import {Keyboard} from 'react-native';
 import {Colors, Theme} from '../types/theme';
+import {UserCredential, signInWithEmailAndPassword} from 'firebase/auth';
+import {auth} from '../database/config';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -27,6 +30,15 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
   const [currentFocus, setCurrentFocus] = useState('');
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const login = () => {
+    signInWithEmailAndPassword(auth, email, password).catch(error =>
+      Alert.alert('Please enter a valid email & password'),
+    );
+  };
+
   return (
     <>
       <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
@@ -50,6 +62,8 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <Ionicon name="mail-outline" color={'grey'} size={24} />
               <TextInput
+                value={email}
+                onChangeText={text => setEmail(text)}
                 onFocus={() => setCurrentFocus('email')}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -66,6 +80,8 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
               ]}>
               <SimpleLineIcon name="lock" color={'grey'} size={24} />
               <TextInput
+                value={password}
+                onChangeText={text => setPassword(text)}
                 secureTextEntry={true}
                 onFocus={() => setCurrentFocus('password')}
                 placeholder="Password"
@@ -77,10 +93,7 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
           </View>
 
           <View style={{marginTop: 24, alignItems: 'flex-end'}}>
-            <Button
-              title="Login"
-              onPress={() => navigation.navigate('HomeScreen')}
-            />
+            <Button title="Login" onPress={() => login()} />
           </View>
         </View>
       </KeyboardAvoidingView>
