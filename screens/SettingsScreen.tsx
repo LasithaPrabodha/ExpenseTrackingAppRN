@@ -1,12 +1,16 @@
-import React from 'react';
-import {View, Alert, StyleSheet} from 'react-native';
+import React, {useContext} from 'react';
+import {View, Alert, StyleSheet, Text} from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import {ListItem} from '../components/ListItem';
 import {NavigationProp, useTheme} from '@react-navigation/native';
 import {Switch} from 'react-native';
 import {Theme} from '../types/theme';
-import { ThemeContext } from '../theme/context';
+import {ThemeContext} from '../theme/context';
+import useAuth from '../lib/AuthProvider';
+import {signOut} from 'firebase/auth';
+import {auth} from '../database/config';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -35,11 +39,16 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
     );
   };
   const {colors} = useTheme() as Theme;
+  const user = useAuth();
 
-  const {setTheme, theme} = React.useContext(ThemeContext);
+  const {setTheme, theme} = useContext(ThemeContext);
+  const logout = () => signOut(auth);
 
   return (
     <View style={styles.container}>
+      <View>
+        <Text>{user?.email}</Text>
+      </View>
       <ListItem
         label="Categories"
         detail={
@@ -71,6 +80,12 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
         isDestructive
         label="Erase all data"
         onClick={() => onClickErase()}
+      />
+      <ListItem
+        isDestructive
+        label="Log out"
+        onClick={() => logout()}
+        detail={<Ionicons name="log-out-outline" />}
       />
     </View>
   );

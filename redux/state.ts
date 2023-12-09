@@ -1,5 +1,6 @@
-import { Category } from "../models/category";
-import { Expense } from "../models/expense";
+import {User} from 'firebase/auth';
+import {Category} from '../models/category';
+import {Expense} from '../models/expense';
 
 export interface ExpensesState {
   isLoading: boolean;
@@ -17,4 +18,12 @@ export interface CategoriesState {
 
 export const initialCategoriesState: CategoriesState = {
   categories: [],
+};
+
+export interface UserState {
+  user: User | null;
+}
+
+export const initialUserState: UserState = {
+  user: null,
 };

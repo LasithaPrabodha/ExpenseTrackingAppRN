@@ -16,8 +16,8 @@ import {AppDispatch} from '../redux/store';
 import {Expense} from '../models/expense';
 import {useTheme} from '@react-navigation/native';
 import {Colors, Theme} from '../types/theme';
-import {fetchExpensesAction} from '../redux/actions/expenseActions';
 import {allExpensesSelector} from '../redux/selectors';
+import {fetchExpensesAction} from '../redux/actions/expenseActions';
 
 export const ExpensesScreen = (): JSX.Element => {
   const expenses: Expense[] = useSelector(allExpensesSelector);
@@ -38,7 +38,7 @@ export const ExpensesScreen = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(fetchExpensesAction());
-  }, [dispatch]);
+  }, []);
 
   return (
     <>

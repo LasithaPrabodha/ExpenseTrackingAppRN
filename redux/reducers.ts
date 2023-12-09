@@ -6,6 +6,7 @@ import {
   initialCategoriesState,
   ExpensesState,
   initialExpensesState,
+  initialUserState,
 } from './state';
 import {Expense} from './../models/expense';
 import {fetchExpensesAction} from './actions/expenseActions';

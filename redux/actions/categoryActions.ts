@@ -1,20 +1,17 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  setDoc,
-  writeBatch,
-} from 'firebase/firestore';
-import {firestore} from '../../database/config';
+import {collection, deleteDoc, doc, getDocs, setDoc} from 'firebase/firestore';
+import {auth, firestore} from '../../database/config';
 import {Category} from '../../models/category';
 
 export const fetchCategoriesAction = createAsyncThunk(
   'categories/fetch',
   async () => {
+    const userid = auth.currentUser?.uid;
+
+    if (!userid) return {data: []};
+
     try {
-      const ref = collection(firestore, 'users/test-user/category-list');
+      const ref = collection(firestore, 'users/' + userid + '/category-list');
       const querySnapshot = await getDocs(ref);
       let categories: any[] = [];
 
@@ -35,12 +32,17 @@ export const fetchCategoriesAction = createAsyncThunk(
 export const addCategoryAction = createAsyncThunk(
   'categories/add',
   async (category: Category) => {
+    const userid = auth.currentUser?.uid;
+
+    if (!userid) return {data: null};
     try {
-      const id = doc(collection(firestore, 'users/test-user/category-list')).id;
+      const id = doc(
+        collection(firestore, 'users/' + userid + '/category-list'),
+      ).id;
 
       // save in firestore
       await setDoc(
-        doc(firestore, 'users/test-user/category-list', id),
+        doc(firestore, 'users/' + userid + '/category-list', id),
         category.toFirestoreObject(),
       );
 
