@@ -13,8 +13,6 @@ export const TabBarIcon = ({type, color, size}: TabBarIconProps) => {
   switch (type) {
     case 'expenses':
       return <MCI name="tray-arrow-up" color={color} size={size} />;
-    case 'reports':
-      return <Ionicons name="bar-chart" size={size} color={color} />;
     case 'add':
       return <ADI name="plus" size={size} color={color} />;
     case 'settings':
