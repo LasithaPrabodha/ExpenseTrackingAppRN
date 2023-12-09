@@ -9,9 +9,14 @@ import {
   Keyboard,
   Platform,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  AndroidNativeProps,
+} from '@react-native-community/datetimepicker';
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
@@ -48,9 +53,9 @@ export const AddExpenseScreen = (): JSX.Element => {
     dispatch(fetchCategoriesAction());
   }, [dispatch]);
 
-  useEffect(()=>{
-    setCategory(categories[0])
-  },[categories])
+  useEffect(() => {
+    setCategory(categories[0]);
+  }, [categories]);
 
   const selectRecurrence = (selectedRecurrence: string) => {
     setRecurrence(selectedRecurrence as Recurrence);
@@ -69,11 +74,29 @@ export const AddExpenseScreen = (): JSX.Element => {
     setNote('');
     setCategory(categories[0]);
   };
+  const onChangeAndroidDate = (timestamp?: number) => {
+    setDate(new Date(timestamp ?? new Date()));
+  };
 
   const submitExpense = () => {
     // add
 
     if (!amount || !note) {
+      Alert.alert(
+        'Missing data',
+        'Please fill all data in the form',
+        [
+          {
+            text: 'Okay',
+            onPress: () => {},
+            style: 'default',
+          },
+        ],
+        {
+          userInterfaceStyle: 'dark',
+        },
+      );
+
       return;
     }
 
@@ -88,6 +111,8 @@ export const AddExpenseScreen = (): JSX.Element => {
 
     dispatch(addExpenseAction(expense));
     clearForm();
+
+    Keyboard.dismiss()
   };
 
   const theme = useTheme() as Theme;
@@ -130,7 +155,7 @@ export const AddExpenseScreen = (): JSX.Element => {
           <ListItem
             label="Date"
             detail={
-              Platform.OS === 'ios' && (
+              Platform.OS === 'ios' ? (
                 <DateTimePicker
                   value={new Date(date)}
                   mode={'date'}
@@ -148,6 +173,27 @@ export const AddExpenseScreen = (): JSX.Element => {
                     newDate && setDate(newDate);
                   }}
                 />
+              ) : (
+                <TouchableOpacity
+                  style={styles.datepicker}
+                  onPress={() => {
+                    DateTimePickerAndroid.open({
+                      onChange: event => {
+                        onChangeAndroidDate(event.nativeEvent.timestamp);
+                      },
+                      value: new Date(date),
+                      maximumDate: new Date(),
+                      minimumDate: new Date(
+                        new Date().getFullYear() - 1,
+                        new Date().getMonth(),
+                        new Date().getDate(),
+                      ),
+                    } as AndroidNativeProps);
+                  }}>
+                  <Text style={styles.datepickertext}>
+                    {new Date(date).toISOString().split('T')[0]}
+                  </Text>
+                </TouchableOpacity>
               )
             }
           />
@@ -268,6 +314,17 @@ const createStyles = (colors: Colors) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    datepicker: {
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 2,
+    },
+    datepickertext: {
+      color: colors.text,
+      textTransform: 'capitalize',
+      fontSize: 16,
     },
     recurrence: {
       color: colors.primary,

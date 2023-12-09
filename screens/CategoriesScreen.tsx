@@ -63,6 +63,7 @@ export const CategoriesScreen = (): JSX.Element => {
     dispatch(addCategoryAction(category));
     setNewName('');
     setSelectedColor(colors.primary);
+    dispatch(fetchCategoriesAction());
   };
 
   const deleteCategory = () => {};
