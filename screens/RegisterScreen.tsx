@@ -35,6 +35,9 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
         const response = await createUserWithEmailAndPassword(auth, email, password);
         navigation.navigate('HomeScreen')
       }
+      else {
+        alert("Make sure to input the same password")
+      }
     } catch (err) {
       alert(err);
       console.log(err);
