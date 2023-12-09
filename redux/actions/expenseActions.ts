@@ -48,7 +48,7 @@ export const addExpenseAction = createAsyncThunk(
         expenseFire,
       );
 
-      return {data: id};
+      return {data: expense};
     } catch (error: any) {
       console.error(error.message);
       return {error: error.message};

@@ -9,7 +9,7 @@ import {
   initialUserState,
 } from './state';
 import {Expense} from './../models/expense';
-import {fetchExpensesAction} from './actions/expenseActions';
+import {addExpenseAction, fetchExpensesAction} from './actions/expenseActions';
 
 const expensesSlice = createSlice({
   name: 'expenses',
@@ -22,7 +22,14 @@ const expensesSlice = createSlice({
       }
       const expenses = (payload as {data: Expense[]}).data as Expense[];
       return {...state, expenses};
-    });
+    }).addCase(addExpenseAction.fulfilled, (state, {payload}) => {
+      if (payload.error) {
+        return state;
+      }
+      const expense = (payload as {data: Expense}).data as Expense;
+      const expenses = [...state.expenses, expense] 
+      return {...state, expenses};
+    })
   },
 });
 
