@@ -46,8 +46,8 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text>{user?.email}</Text>
+      <View style={{padding: 10, paddingBottom: 20}}>
+        <Text style={{fontSize: 16}}>{user?.email}</Text>
       </View>
       <ListItem
         label="Categories"
@@ -85,7 +85,14 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
         isDestructive
         label="Log out"
         onClick={() => logout()}
-        detail={<Ionicons name="log-out-outline" />}
+        detail={
+          <Ionicons
+            name="log-out-outline"
+            style={{opacity: 0.3}}
+            color={colors.text}
+            size={25}
+          />
+        }
       />
     </View>
   );

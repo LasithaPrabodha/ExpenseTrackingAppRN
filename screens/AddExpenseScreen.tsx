@@ -20,6 +20,7 @@ import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
+import Toast from 'react-native-toast-message';
 
 import {ListItem} from '../components/ListItem';
 import {Recurrence} from '../types/recurrence';
@@ -74,13 +75,12 @@ export const AddExpenseScreen = (): JSX.Element => {
     setNote('');
     setCategory(categories[0]);
   };
-  
+
   const onChangeAndroidDate = (timestamp?: number) => {
     setDate(new Date(timestamp ?? new Date()));
   };
 
   const submitExpense = () => {
-
     if (!amount || !note) {
       Alert.alert(
         'Missing data',
@@ -111,8 +111,13 @@ export const AddExpenseScreen = (): JSX.Element => {
 
     dispatch(addExpenseAction(expense));
     clearForm();
-
     Keyboard.dismiss();
+
+    Toast.show({
+      type: 'success',
+      text1: 'Added',
+      text2: 'A new expense added! ✅',
+    });
   };
 
   const theme = useTheme() as Theme;
