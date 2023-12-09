@@ -10,9 +10,10 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
 
 import {ListItem} from '../components/ListItem';
@@ -87,7 +88,7 @@ export const AddExpenseScreen = (): JSX.Element => {
   return (
     <>
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior="height"
         keyboardVerticalOffset={112}
         style={styles.keyboardAvoidView}>
         <View style={styles.newExpenseForm}>
@@ -221,17 +222,19 @@ export const AddExpenseScreen = (): JSX.Element => {
           />
         )}
       </BottomSheet>
-      <InputAccessoryView nativeID="dismissKeyboard">
-        <View style={styles.dismissWrapper}>
-          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-            <MaterialIcons
-              name="keyboard-hide"
-              size={28}
-              style={{color: colors.primary}}
-            />
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcons
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };

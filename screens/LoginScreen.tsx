@@ -3,6 +3,7 @@ import {
   Button,
   InputAccessoryView,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -11,10 +12,10 @@ import {
 } from 'react-native';
 import {NavigationProp, useTheme} from '@react-navigation/native';
 import {TouchableOpacity} from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import SimpleLineIcon from 'react-native-vector-icons/SimpleLineIcons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Ionicon from '@expo/vector-icons/Ionicons';
+import SimpleLineIcon from '@expo/vector-icons/SimpleLineIcons';
+import Fontisto from '@expo/vector-icons/Fontisto';
 import {Keyboard} from 'react-native';
 import {Colors, Theme} from '../types/theme';
 
@@ -28,7 +29,7 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
   const styles = createStyles(colors);
   return (
     <>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoid}>
+      <KeyboardAvoidingView behavior="height" style={styles.keyboardAvoid}>
         <View style={styles.moneyIconWrapper}>
           <Fontisto
             style={styles.moneyIcon}
@@ -91,17 +92,19 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
           <Text style={{color: colors.primary}}>Sign up</Text>
         </Pressable>
       </View>
-      <InputAccessoryView nativeID="dismissKeyboard">
-        <View style={styles.dismissWrapper}>
-          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-            <MaterialIcons
-              name="keyboard-hide"
-              size={28}
-              style={{color: colors.primary}}
-            />
-          </TouchableOpacity>
-        </View>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID="dismissKeyboard">
+          <View style={styles.dismissWrapper}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+              <MaterialIcons
+                name="keyboard-hide"
+                size={28}
+                style={{color: colors.primary}}
+              />
+            </TouchableOpacity>
+          </View>
+        </InputAccessoryView>
+      )}
     </>
   );
 };

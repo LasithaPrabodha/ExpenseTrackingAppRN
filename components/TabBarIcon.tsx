@@ -1,7 +1,7 @@
 import React from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import ADI from 'react-native-vector-icons/AntDesign';
-import MCI from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import ADI from '@expo/vector-icons/AntDesign';
+import MCI from '@expo/vector-icons/MaterialCommunityIcons';
 
 type TabBarIconProps = {
   color: string;
@@ -13,8 +13,6 @@ export const TabBarIcon = ({type, color, size}: TabBarIconProps) => {
   switch (type) {
     case 'expenses':
       return <MCI name="tray-arrow-up" color={color} size={size} />;
-    case 'reports':
-      return <Ionicons name="bar-chart" size={size} color={color} />;
     case 'add':
       return <ADI name="plus" size={size} color={color} />;
     case 'settings':
