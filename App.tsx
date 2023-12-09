@@ -6,6 +6,7 @@ import {store} from './redux/store';
 import {ThemeContext} from './theme/context';
 import {AuthProvider} from './lib/AuthProvider';
 import Navigation from './Navigation';
+import Toast from 'react-native-toast-message';
 
 export default function App(): JSX.Element {
   const [theme, setTheme] = useState('light');
@@ -19,6 +20,8 @@ export default function App(): JSX.Element {
           </ThemeContext.Provider>
         </AuthProvider>
       </Provider>
+
+      <Toast />
     </GestureHandlerRootView>
   );
 }
