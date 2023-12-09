@@ -1,5 +1,4 @@
 import React from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import ADI from '@expo/vector-icons/AntDesign';
 import MCI from '@expo/vector-icons/MaterialCommunityIcons';
 

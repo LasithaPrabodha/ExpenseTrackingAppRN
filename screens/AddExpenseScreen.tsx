@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   KeyboardAvoidingView,
   TextInput,
@@ -21,17 +21,17 @@ import {Recurrence} from '../types/recurrence';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
-import {addExpense} from '../redux/expensesSlice';
+import {AppDispatch, RootState} from '../redux/store';
 import {Expense} from '../models/expense';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
+import {addExpenseAction} from '../redux/actions/expenseActions';
+import {fetchCategoriesAction} from '../redux/actions/categoryActions';
+import {allCategoriesSelector} from '../redux/selectors';
 
 export const AddExpenseScreen = (): JSX.Element => {
-  const categories: Category[] = useSelector(
-    (state: RootState) => state.categories.categories,
-  );
-  const dispatch = useDispatch();
+  const categories: Category[] = useSelector(allCategoriesSelector);
+  const dispatch = useDispatch<AppDispatch>();
   const sheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
 
@@ -43,6 +43,14 @@ export const AddExpenseScreen = (): JSX.Element => {
   const [date, setDate] = useState<Date>(new Date());
   const [note, setNote] = useState('');
   const [category, setCategory] = useState<Category>(categories[0]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesAction());
+  }, [dispatch]);
+
+  useEffect(()=>{
+    setCategory(categories[0])
+  },[categories])
 
   const selectRecurrence = (selectedRecurrence: string) => {
     setRecurrence(selectedRecurrence as Recurrence);
@@ -78,7 +86,7 @@ export const AddExpenseScreen = (): JSX.Element => {
       category,
     });
 
-    dispatch(addExpense(expense));
+    dispatch(addExpenseAction(expense));
     clearForm();
   };
 
@@ -201,7 +209,7 @@ export const AddExpenseScreen = (): JSX.Element => {
         {sheetView === 'category' && (
           <BottomSheetFlatList
             data={categories}
-            keyExtractor={({id}) => id}
+            keyExtractor={({id}) => id!}
             renderItem={({item}) => (
               <TouchableHighlight
                 style={styles.bottomSheetBtn}
