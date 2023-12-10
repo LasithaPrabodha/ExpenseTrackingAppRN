@@ -1,10 +1,17 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
-
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import {ExpensesGroup} from '../types/expenses-group';
 import {ExpenseRow} from './ExpenseRow';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
+import {isFetchingSelector} from '../redux/selectors';
 
 type Props = {
   groups: ExpensesGroup[];
@@ -13,6 +20,17 @@ type Props = {
 export const ExpensesList = ({groups}: Props) => {
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
+  const loading = useSelector(isFetchingSelector);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+        <Text style={styles.loadingText}>Loading list!</Text>
+        <Text style={styles.loadingText}>Please wait...</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -71,5 +89,14 @@ const createStyles = (colors: Colors) =>
       fontSize: 17,
       color: colors.textSecondary,
       fontWeight: '600',
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    loadingText: {
+      fontSize: 20,
+      marginTop: 10,
     },
   });

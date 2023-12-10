@@ -22,7 +22,7 @@ import {RectButton, TouchableOpacity} from 'react-native-gesture-handler';
 import {CategoryRow} from '../components/CategoryRow';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../redux/store';
+import {AppDispatch} from '../redux/store';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -63,10 +63,8 @@ export const CategoriesScreen = (): JSX.Element => {
     dispatch(addCategoryAction(category));
     setNewName('');
     setSelectedColor(colors.primary);
-    dispatch(fetchCategoriesAction());
   };
 
-  const deleteCategory = () => {};
 
   return (
     <>
@@ -77,21 +75,7 @@ export const CategoriesScreen = (): JSX.Element => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.categoriesWrapper}>
             {categories.map(({id, color, name}) => (
-              <Swipeable
-                key={id}
-                renderRightActions={() => {
-                  return (
-                    <View style={styles.categoryItemWrapper}>
-                      <RectButton
-                        style={styles.categoryButton}
-                        onPress={() => deleteCategory()}>
-                        <EvilIcons name="trash" size={40} color={colors.text} />
-                      </RectButton>
-                    </View>
-                  );
-                }}>
-                <CategoryRow color={color} name={name} />
-              </Swipeable>
+              <CategoryRow key={id!} id={id!} color={color} name={name} />
             ))}
           </View>
         </ScrollView>

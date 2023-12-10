@@ -28,3 +28,11 @@ export const allCategoriesSelector = createSelector(
   catStateSelector,
   (state: CategoriesState) => state?.categories,
 );
+
+/**
+ * isLoading selector
+ */
+export const isCategoriesFetchingSelector = createSelector(
+  catStateSelector,
+  (state: CategoriesState) => state?.isLoading,
+);

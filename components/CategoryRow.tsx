@@ -3,15 +3,39 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Colors, Theme} from '../types/theme';
+import {Swipeable} from 'react-native-gesture-handler';
+import DeleteIcon from './DeleteIcon';
+import {AppDispatch} from '../redux/store';
+import {useDispatch} from 'react-redux';
+import {deleteCategory} from '../redux/actions/categoryActions';
 
-export const CategoryRow = ({color, name}: {color: string; name: string}) => {
+export const CategoryRow = ({
+  id,
+  color,
+  name,
+}: {
+  id: string;
+  color: string;
+  name: string;
+}) => {
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
-    <View style={styles.container}>
-      <View style={[styles.color, {backgroundColor: color}]} />
-      <Text style={styles.name}>{name}</Text>
-    </View>
+    <Swipeable
+      renderRightActions={() => (
+        <DeleteIcon
+          alertTitle="Remove Category"
+          alertBody={`Confirm you want to delete ${name}. This action cannot be undone!`}
+          onPressOk={() => dispatch(deleteCategory(id!))}
+        />
+      )}>
+      <View style={styles.container}>
+        <View style={[styles.color, {backgroundColor: color}]} />
+        <Text style={styles.name}>{name}</Text>
+      </View>
+    </Swipeable>
   );
 };
 

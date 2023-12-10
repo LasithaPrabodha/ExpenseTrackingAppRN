@@ -35,7 +35,6 @@ export const ExpensesScreen = (): JSX.Element => {
     setRecurrence(newRecurrence);
     recurrenceSheetRef.current?.close();
   };
-
   useEffect(() => {
     dispatch(fetchExpensesAction());
   }, []);

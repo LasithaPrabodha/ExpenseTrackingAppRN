@@ -7,13 +7,18 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {auth} from '../database/config'; 
+import {auth} from '../database/config';
 
 interface Props {
   children?: ReactNode;
 }
 
-const AuthContext = createContext<User | null | undefined>({} as User);
+interface AuthState {
+  user: User | null | undefined;
+  initializing: boolean;
+}
+
+const AuthContext = createContext<AuthState>({} as AuthState);
 
 export const AuthProvider = ({children}: Props) => {
   const [initializing, setInitializing] = useState(true);
@@ -27,7 +32,11 @@ export const AuthProvider = ({children}: Props) => {
     return subscriber;
   }, []);
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{initializing, user}}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default function useAuth() {

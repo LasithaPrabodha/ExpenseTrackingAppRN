@@ -2,7 +2,9 @@ import React, {useMemo} from 'react';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {useTheme} from '@react-navigation/native';
+import ADI from '@expo/vector-icons/AntDesign';
 import {Colors, Theme} from '../types/theme';
+import DeleteIcon from './DeleteIcon';
 
 type Props = {
   label: string;
@@ -49,11 +51,11 @@ export const ListItem = ({
     return (
       <Swipeable
         renderRightActions={() => (
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => onDelete && onDelete('right')}>
-            <Text style={styles.deleteText}>Delete</Text>
-          </TouchableOpacity>
+          <DeleteIcon
+            alertTitle={'Remove ' + label}
+            alertBody={`Confirm you want to delete ${label}. This action cannot be undone!`}
+            onPressOk={() => onDelete && onDelete('right')}
+          />
         )}
         onSwipeableOpen={onDelete}>
         {item}

@@ -38,8 +38,7 @@ import {allCategoriesSelector} from '../redux/selectors';
 export const AddExpenseScreen = (): JSX.Element => {
   const categories: Category[] = useSelector(allCategoriesSelector);
   const dispatch = useDispatch<AppDispatch>();
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
+  const sheetRef = useRef<BottomSheet>(null); 
 
   const [sheetView, setSheetView] = useState<'recurrence' | 'category'>(
     'recurrence',
@@ -119,7 +118,7 @@ export const AddExpenseScreen = (): JSX.Element => {
       text2: 'A new expense added!',
     });
   };
-
+  
   const theme = useTheme() as Theme;
   const {colors} = theme;
   const styles = createStyles(colors);
@@ -241,7 +240,7 @@ export const AddExpenseScreen = (): JSX.Element => {
         handleStyle={styles.bottomSheetHandle}
         handleIndicatorStyle={styles.handle}
         enablePanDownToClose
-        snapPoints={snapPoints}>
+        snapPoints={['25%', '50%']}>
         {sheetView === 'recurrence' && (
           <BottomSheetFlatList
             data={Object.keys(Recurrence)}

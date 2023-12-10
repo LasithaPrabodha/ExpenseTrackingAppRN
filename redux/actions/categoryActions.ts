@@ -5,13 +5,13 @@ import {Category} from '../../models/category';
 
 export const fetchCategoriesAction = createAsyncThunk(
   'categories/fetch',
-  async () => {
+  async (_, {rejectWithValue}) => {
     const userid = auth.currentUser?.uid;
 
-    if (!userid) return {data: []};
+    if (!userid) return rejectWithValue('You are not logged in!');
 
     try {
-      const ref = collection(firestore, 'users/' + userid + '/category-list');
+      const ref = collection(firestore, 'users', userid, 'category-list');
       const querySnapshot = await getDocs(ref);
       let categories: any[] = [];
 
@@ -24,48 +24,76 @@ export const fetchCategoriesAction = createAsyncThunk(
       return {data: categories};
     } catch (error: any) {
       console.error(error);
-      return {error: error.message};
+      return rejectWithValue(error.message);
     }
   },
 );
 
 export const addCategoryAction = createAsyncThunk(
   'categories/add',
-  async (category: Category) => {
+  async (category: Category, {rejectWithValue}) => {
     const userid = auth.currentUser?.uid;
 
-    if (!userid) return {data: null};
+    if (!userid) return rejectWithValue('You are not logged in!');
+
     try {
       const id = doc(
-        collection(firestore, 'users/' + userid + '/category-list'),
+        collection(firestore, 'users', userid, 'category-list'),
       ).id;
 
       // save in firestore
       await setDoc(
-        doc(firestore, 'users/' + userid + '/category-list', id),
+        doc(firestore, 'users', userid, 'category-list', id),
         category.toFirestoreObject(),
       );
 
-      return {data: id};
+      return {data: category};
     } catch (error: any) {
       console.error(error.message);
-      return {error: error.message};
+      return rejectWithValue(error.message);
     }
   },
 );
 
 export const deleteCategory = createAsyncThunk(
-  'categories/fetch',
-  async (categoryId: string) => {
+  'categories/delete',
+  async (categoryId: string, thunkAPI) => {
+    const userid = auth.currentUser?.uid;
+
+    if (!userid) return thunkAPI.rejectWithValue('You are not logged in!');
+
     try {
       await deleteDoc(
-        doc(firestore, 'users/test-user/category-list', categoryId),
+        doc(firestore, 'users', userid, 'category-list', categoryId),
       );
-
+      await thunkAPI.dispatch(fetchCategoriesAction());
       return {data: null};
     } catch (error: any) {
       console.error(error.message);
-      return {error: error.message};
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  },
+);
+export const deleteAllCategory = createAsyncThunk(
+  'categories/deleteAll',
+  async (_, thunkAPI) => {
+    try {
+      const userid = auth.currentUser?.uid;
+
+      if (!userid) return thunkAPI.rejectWithValue('You are not logged in!');
+
+      const ref = collection(firestore, 'users', userid, 'category-list');
+      const querySnapshot = await getDocs(ref);
+
+      querySnapshot?.forEach(doc => {
+        deleteDoc(doc.ref);
+      });
+
+      await thunkAPI.dispatch(fetchCategoriesAction());
+      return {data: null};
+    } catch (error: any) {
+      console.error(error.message);
+      return thunkAPI.rejectWithValue(error.message);
     }
   },
 );
