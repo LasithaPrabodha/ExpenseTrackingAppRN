@@ -1,6 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import expensesReducer from './expensesSlice';
-import categoriesReducer from './categoriesSlice';
+import {expensesReducer, categoriesReducer} from './reducers';
 
 export const store = configureStore({
   reducer: {
@@ -11,9 +10,13 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these field paths in all actions
-        ignoredActionPaths: ['payload.date', 'payload.category', 'payload'],
+        ignoredActionPaths: ['meta.arg', 'payload.data'],
         // Ignore these paths in the state
-        ignoredPaths: ['expenses.expenses', 'categories.categories'],
+        ignoredPaths: [
+          'expenses.entities',
+          'categories.categories',
+          'expenses.expenses',
+        ],
       },
     }),
 });

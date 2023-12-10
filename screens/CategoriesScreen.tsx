@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   InputAccessoryView,
@@ -22,23 +22,29 @@ import {RectButton, TouchableOpacity} from 'react-native-gesture-handler';
 import {CategoryRow} from '../components/CategoryRow';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
-import {addCategory} from '../redux/categoriesSlice';
+import {AppDispatch} from '../redux/store';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import {
+  addCategoryAction,
+  fetchCategoriesAction,
+} from '../redux/actions/categoryActions';
+import {allCategoriesSelector} from '../redux/selectors';
 
 export const CategoriesScreen = (): JSX.Element => {
-  const categories: Category[] = useSelector(
-    (state: RootState) => state.categories.categories,
-  );
-  const dispatch = useDispatch();
+  const categories: Category[] = useSelector(allCategoriesSelector);
+  const dispatch = useDispatch<AppDispatch>();
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
 
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [selectedColor, setSelectedColor] = useState(colors.primary);
   const [newName, setNewName] = useState('');
+
+  useEffect(() => {
+    dispatch(fetchCategoriesAction());
+  }, [dispatch]);
 
   const onSelectColor = (hex: string) => {
     setSelectedColor(hex);
@@ -54,12 +60,11 @@ export const CategoriesScreen = (): JSX.Element => {
       name: newName,
       color: selectedColor,
     });
-    dispatch(addCategory(category));
+    dispatch(addCategoryAction(category));
     setNewName('');
     setSelectedColor(colors.primary);
   };
 
-  const deleteCategory = () => {};
 
   return (
     <>
@@ -70,21 +75,7 @@ export const CategoriesScreen = (): JSX.Element => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.categoriesWrapper}>
             {categories.map(({id, color, name}) => (
-              <Swipeable
-                key={id}
-                renderRightActions={() => {
-                  return (
-                    <View style={styles.categoryItemWrapper}>
-                      <RectButton
-                        style={styles.categoryButton}
-                        onPress={() => deleteCategory()}>
-                        <EvilIcons name="trash" size={40} color={colors.text} />
-                      </RectButton>
-                    </View>
-                  );
-                }}>
-                <CategoryRow color={color} name={name} />
-              </Swipeable>
+              <CategoryRow key={id!} id={id!} color={color} name={name} />
             ))}
           </View>
         </ScrollView>

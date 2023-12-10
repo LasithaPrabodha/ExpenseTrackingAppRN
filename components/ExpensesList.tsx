@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import {View, Text, FlatList, StyleSheet, ActivityIndicator} from 'react-native';
-import * as database from '../database'
+import React from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import {ExpensesGroup} from '../types/expenses-group';
 import {ExpenseRow} from './ExpenseRow';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setExpense } from '../redux/expensesSlice';
-import { RootState } from '../redux/store';
+import {useSelector} from 'react-redux';
+import {isFetchingSelector} from '../redux/selectors';
 
 type Props = {
   groups: ExpensesGroup[];
@@ -16,32 +20,17 @@ type Props = {
 export const ExpensesList = ({groups}: Props) => {
   const {colors} = useTheme() as Theme;
   const styles = createStyles(colors);
-  const dispatch = useDispatch()
-  const expenses = useSelector((state: RootState) => state.expenses.expenses);
-  const [loading, setLoading] = useState(true);
+  const loading = useSelector(isFetchingSelector);
 
-  useEffect(()=>{
-    (async ()=>{
-      try{
-        setLoading(true)
-        const data = (await database.load()).map(item=> ({...item, date: new Date(item.date)}))
-        dispatch(setExpense(data));
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching expenses:', err)
-      }
-    })()
-    }, [])
-
-    if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large"/>
-        <Text style={styles.loadingText}>Saving data!</Text>
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
+        <Text style={styles.loadingText}>Loading list!</Text>
         <Text style={styles.loadingText}>Please wait...</Text>
       </View>
-      );
-    }
+    );
+  }
 
   return (
     <FlatList
@@ -108,6 +97,6 @@ const createStyles = (colors: Colors) =>
     },
     loadingText: {
       fontSize: 20,
-      marginTop:10
-    }
+      marginTop: 10,
+    },
   });

@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   KeyboardAvoidingView,
   TextInput,
@@ -9,31 +9,36 @@ import {
   Keyboard,
   Platform,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  AndroidNativeProps,
+} from '@react-native-community/datetimepicker';
+import {DateTimePickerAndroid} from '@react-native-community/datetimepicker';
+
 import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import 'react-native-get-random-values';
 import {v4 as uuid} from 'uuid';
+import Toast from 'react-native-toast-message';
+
 import {ListItem} from '../components/ListItem';
 import {Recurrence} from '../types/recurrence';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Category} from '../models/category';
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../redux/store';
-import {addExpense} from '../redux/expensesSlice';
+import {AppDispatch} from '../redux/store';
 import {Expense} from '../models/expense';
 import {Colors, Theme} from '../types/theme';
 import {useTheme} from '@react-navigation/native';
-import * as database from '../database'
+import {addExpenseAction} from '../redux/actions/expenseActions';
+import {fetchCategoriesAction} from '../redux/actions/categoryActions';
+import {allCategoriesSelector} from '../redux/selectors';
 
 export const AddExpenseScreen = (): JSX.Element => {
-  const categories: Category[] = useSelector(
-    (state: RootState) => state.categories.categories,
-  );
-  const dispatch = useDispatch();
-  const sheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%', '50%', '90%'], []);
+  const categories: Category[] = useSelector(allCategoriesSelector);
+  const dispatch = useDispatch<AppDispatch>();
+  const sheetRef = useRef<BottomSheet>(null); 
 
   const [sheetView, setSheetView] = useState<'recurrence' | 'category'>(
     'recurrence',
@@ -43,6 +48,14 @@ export const AddExpenseScreen = (): JSX.Element => {
   const [date, setDate] = useState<Date>(new Date());
   const [note, setNote] = useState('');
   const [category, setCategory] = useState<Category>(categories[0]);
+
+  useEffect(() => {
+    dispatch(fetchCategoriesAction());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setCategory(categories[0]);
+  }, [categories]);
 
   const selectRecurrence = (selectedRecurrence: string) => {
     setRecurrence(selectedRecurrence as Recurrence);
@@ -62,10 +75,27 @@ export const AddExpenseScreen = (): JSX.Element => {
     setCategory(categories[0]);
   };
 
-  const submitExpense = async () => {
-    // add
+  const onChangeAndroidDate = (timestamp?: number) => {
+    setDate(new Date(timestamp ?? new Date()));
+  };
 
+  const submitExpense = () => {
     if (!amount || !note) {
+      Alert.alert(
+        'Missing data',
+        'Please fill all data in the form',
+        [
+          {
+            text: 'Okay',
+            onPress: () => {},
+            style: 'default',
+          },
+        ],
+        {
+          userInterfaceStyle: 'dark',
+        },
+      );
+
       return;
     }
 
@@ -77,10 +107,16 @@ export const AddExpenseScreen = (): JSX.Element => {
       note,
       category,
     });
-    const id = await database.save(expense)
-    console.log('Id', id)
-    dispatch(addExpense(expense));
+
+    dispatch(addExpenseAction(expense));
     clearForm();
+    Keyboard.dismiss();
+
+    Toast.show({
+      type: 'success',
+      text1: 'Added ✅',
+      text2: 'A new expense added!',
+    });
   };
   
   const theme = useTheme() as Theme;
@@ -123,7 +159,7 @@ export const AddExpenseScreen = (): JSX.Element => {
           <ListItem
             label="Date"
             detail={
-              Platform.OS === 'ios' && (
+              Platform.OS === 'ios' ? (
                 <DateTimePicker
                   value={new Date(date)}
                   mode={'date'}
@@ -141,6 +177,27 @@ export const AddExpenseScreen = (): JSX.Element => {
                     newDate && setDate(newDate);
                   }}
                 />
+              ) : (
+                <TouchableOpacity
+                  style={styles.datepicker}
+                  onPress={() => {
+                    DateTimePickerAndroid.open({
+                      onChange: event => {
+                        onChangeAndroidDate(event.nativeEvent.timestamp);
+                      },
+                      value: new Date(date),
+                      maximumDate: new Date(),
+                      minimumDate: new Date(
+                        new Date().getFullYear() - 1,
+                        new Date().getMonth(),
+                        new Date().getDate(),
+                      ),
+                    } as AndroidNativeProps);
+                  }}>
+                  <Text style={styles.datepickertext}>
+                    {new Date(date).toISOString().split('T')[0]}
+                  </Text>
+                </TouchableOpacity>
               )
             }
           />
@@ -183,7 +240,7 @@ export const AddExpenseScreen = (): JSX.Element => {
         handleStyle={styles.bottomSheetHandle}
         handleIndicatorStyle={styles.handle}
         enablePanDownToClose
-        snapPoints={snapPoints}>
+        snapPoints={['25%', '50%']}>
         {sheetView === 'recurrence' && (
           <BottomSheetFlatList
             data={Object.keys(Recurrence)}
@@ -202,7 +259,7 @@ export const AddExpenseScreen = (): JSX.Element => {
         {sheetView === 'category' && (
           <BottomSheetFlatList
             data={categories}
-            keyExtractor={({id}) => id}
+            keyExtractor={({id}) => id!}
             renderItem={({item}) => (
               <TouchableHighlight
                 style={styles.bottomSheetBtn}
@@ -261,6 +318,17 @@ const createStyles = (colors: Colors) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    datepicker: {
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      paddingVertical: 2,
+    },
+    datepickertext: {
+      color: colors.text,
+      textTransform: 'capitalize',
+      fontSize: 16,
     },
     recurrence: {
       color: colors.primary,
