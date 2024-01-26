@@ -38,12 +38,12 @@ export default function Navigation({theme}: Props) {
             <>
               <Stack.Screen
                 options={{headerShown: false}}
-                name="LoginScreen"
+                name="Login"
                 component={LoginScreen}
               />
               <Stack.Screen
                 options={{headerBackTitleVisible: false}}
-                name="RegisterScreen"
+                name="Register"
                 component={RegisterScreen}
               />
             </>
@@ -51,11 +51,11 @@ export default function Navigation({theme}: Props) {
             <>
               <Stack.Screen
                 options={{headerShown: false}}
-                name="HomeScreen"
+                name="Home"
                 component={HomeScreen}
               />
               <Stack.Screen
-                name="CategoriesScreen"
+                name="Categories"
                 component={CategoriesScreen}
               />
             </>

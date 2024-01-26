@@ -101,7 +101,7 @@ export const LoginScreen = ({navigation}: RouterProps): JSX.Element => {
         <Text style={{color: colors.text, marginRight: 4}}>
           Don't have an account?
         </Text>
-        <Pressable onPress={() => navigation.navigate('RegisterScreen')}>
+        <Pressable onPress={() => navigation.navigate('Register')}>
           <Text style={{color: colors.primary}}>Sign up</Text>
         </Pressable>
       </View>
