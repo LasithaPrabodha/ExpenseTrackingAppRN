@@ -56,7 +56,7 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
         return response;
       })
       .then((user: UserCredential) => {
-        navigation.navigate('HomeScreen');
+        navigation.navigate('Home');
       })
       .catch(error =>
         Alert.alert('Failed to register... Please try again later.'),
@@ -149,7 +149,7 @@ export const RegisterScreen = ({navigation}: RouterProps): JSX.Element => {
         <Text style={{color: colors.text, marginRight: 4}}>
           Already have an account?
         </Text>
-        <Pressable onPress={() => navigation.navigate('LoginScreen')}>
+        <Pressable onPress={() => navigation.navigate('Login')}>
           <Text style={{color: colors.primary}}>Login</Text>
         </Pressable>
       </View>

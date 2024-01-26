@@ -92,7 +92,7 @@ export const SettingsScreen = ({navigation}: RouterProps): JSX.Element => {
             />
           }
           onClick={() => {
-            navigation.navigate('CategoriesScreen');
+            navigation.navigate('Categories');
           }}
         />
         <ListItem
